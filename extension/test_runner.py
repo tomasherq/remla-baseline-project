@@ -1,18 +1,20 @@
-from typing import List, Iterable, Callable, Union, Any
+from typing import List, Iterable, Callable, Generic, TypeVar
 from extension.mutators import Mutator
 import numpy as np
 
+ModelOutput = TypeVar("ModelOutput")
 
-class MutamorphicTestCase:
+
+class MutamorphicTestCase(Generic[ModelOutput]):
     """
     TODO comment
     """
 
     def __init__(self, input_sentence: str):
         self.input_sentence = input_sentence
-        self.variants: List[str] = []
-        self.output_original = None
-        self.output_variants: Union[List[Any], None] = None
+        self.variants: List[str] | None = None
+        self.output_original: ModelOutput | None = None
+        self.output_variants: List[ModelOutput] | None = None
         self.similarities: List[float] = []
 
     def compute_variants(self, mutator: Mutator, random_seed: int):
@@ -21,7 +23,7 @@ class MutamorphicTestCase:
         """
         self.variants = mutator.mutate(self.input_sentence, random_seed=random_seed)
 
-    def compute_model_outputs(self, model_callback: Callable):
+    def compute_model_outputs(self, model_callback: Callable[[str], ModelOutput]):
         """
         TODO comment
         """
@@ -30,12 +32,13 @@ class MutamorphicTestCase:
         self.output_original = model_callback(self.input_sentence)
         self.output_variants = [model_callback(x) for x in self.variants]
 
-    def compute_similarities(self, similarity_callback: Callable):
+    def compute_similarities(self,
+                             similarity_callback: Callable[[ModelOutput, ModelOutput], float]):
         """
         TODO comment
         """
         assert self.output_original is not None and self.output_variants is not None, \
-                "Make sure to run compute_model_outputs() before this."
+            "Make sure to run compute_model_outputs() before this."
 
         self.similarities = [similarity_callback(self.output_original, x)
                              for x in self.output_variants]
@@ -45,7 +48,7 @@ class MutamorphicTestCase:
         return np.average(self.similarities)
 
 
-class MutamorphicTest:
+class MutamorphicTest(Generic[ModelOutput]):
     """
     TODO comment
     """
@@ -53,8 +56,8 @@ class MutamorphicTest:
     def __init__(self,
                  input_sentences: Iterable[str],
                  mutator: Mutator,
-                 model_callback: Callable,
-                 similarity_callback: Callable,
+                 model_callback: Callable[[str], ModelOutput],
+                 similarity_callback: Callable[[ModelOutput, ModelOutput], float],
                  random_seed: int = 13):
         """
         TODO comment
