@@ -1,4 +1,4 @@
-from typing import Tuple, List, Dict, Callable
+from typing import Tuple, List, Callable
 from extension.Word import Word
 from nltk.tokenize import word_tokenize
 import nltk
@@ -120,14 +120,14 @@ MUTATION_SELECTION_STRATEGIES = {
 }
 
 
-def _get_selection_strategy_func(selection_strategy: str)\
+def _get_selection_strategy_func(selection_strategy: str) \
         -> Callable[[List[Word], int, int, Random], List[List[Tuple[Word, str]]]]:
     """
     A basic dictionary lookup to select either of the two mutation selection strategies.
     """
 
-    assert selection_strategy in MUTATION_SELECTION_STRATEGIES\
-        , "Unknown mutation selection strategy."
+    assert selection_strategy in MUTATION_SELECTION_STRATEGIES, \
+        "Unknown mutation selection strategy."
 
     return MUTATION_SELECTION_STRATEGIES[selection_strategy]
 
