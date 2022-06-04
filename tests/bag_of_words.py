@@ -13,7 +13,6 @@ sys.path.append(os.getcwd())
 def test_bag_of_words():
 
     from src import p2_text_processors
-    from src import p1_preprocessing
 
     bag_data = load("tests/dependencies/bag_data.joblib")
 

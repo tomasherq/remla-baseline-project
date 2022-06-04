@@ -8,12 +8,16 @@ import re
 import argparse
 import os
 import sys
+
 nltk.download('stopwords')
 sys.path.append(os.getcwd()+"/mutamorfic")
 sys.path.append(os.getcwd())
 
 
 def check_arguments():
+
+    if len(sys.argv) < 2:
+        return {}
 
     parser = argparse.ArgumentParser(
         description='Extra arguments can be specified for having a mutamorphic transformation.')
