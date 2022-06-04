@@ -3,17 +3,60 @@ import numpy as np
 import pandas as pd
 from ast import literal_eval
 from nltk.corpus import stopwords
-import sys
 import nltk
 import re
-nltk.download('stopwords')
+import argparse
+import os
+import sys
 
-# Do we need the validation really?
+nltk.download('stopwords')
+sys.path.append(os.getcwd()+"/mutamorfic")
+sys.path.append(os.getcwd())
+selected_options = {}
+
+
+# def start_monitoring():
+#     with open("monitoring/monitor.txt", "w") as file:
+#         file.write("")
+
+#     os.system("python3 monitoring/monitor_basic_metrics.py &")
+
+
+# start_monitoring()
+
+
+def check_arguments():
+
+    parser = argparse.ArgumentParser(
+        description='Extra arguments can be specified for having a mutamorphic transformation.')
+
+    parser.add_argument("--replace", "-r", nargs=2, metavar=('<int>', '<str>'),
+                        help="This option activates transformation by replacement. Need to specify the following: <Nº of words to replace> <Type of replace (random/most common word)>", required=False)
+    parser.add_argument("--jumps", "-j",  type=int, required=False, help="Change every 1/jump words.")
+
+    args = parser.parse_args()
+
+    selected_options = {}
+
+    replace_valid = args.replace is not None and len(args.replace) > 1
+
+    if replace_valid:
+        if args.replace[1] in ["random", "most_common_first"] and args.replace[0].isdigit():
+
+            words_replace = int(args.replace[0])
+            if words_replace > 0:
+                selected_options["replace"] = {"n_words_replace": words_replace, "strategy": args.replace[1]}
+
+    selected_options["jumps"] = {"number": args.jumps, "counter": 0}
+    return selected_options
+
 
 # RegEx expressions to clean the data
 REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
 BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
 STOPWORDS = set(stopwords.words('english'))
+
+# The arguments for having mutamorphic stuff
 
 
 def read_data(filename):
@@ -24,11 +67,24 @@ def read_data(filename):
     return data
 
 
-def text_prepare(text):
+def text_prepare(text, mutator=None):
     """
         text: a string
         return: modified initial string
     """
+
+    # We could change this to be better
+    if mutator is not None:
+
+        if selected_options["jumps"]["counter"] == 0:
+            mutant_text = mutator.mutate(text, 36)
+            if len(mutant_text) > 0:
+                text = mutant_text[0]
+
+        if selected_options["jumps"]["number"] is not None:
+            selected_options["jumps"]["counter"] += 1
+            if selected_options["jumps"]["number"] <= selected_options["jumps"]["counter"]:
+                selected_options["jumps"]["counter"] = 0
 
     text = text.lower()  # lowercase text
     text = re.sub(REPLACE_BY_SPACE_RE, " ", text)  # replace REPLACE_BY_SPACE_RE symbols by space in text
@@ -38,6 +94,13 @@ def text_prepare(text):
 
 
 def get_preprocessed_data(path_data="data/"):
+
+    from mutamorfic.mutators import ReplacementMutator
+
+    mutator = None
+    if "replace" in selected_options:
+        mutator = ReplacementMutator(selected_options["replace"]["n_words_replace"],
+                                     1, selected_options["replace"]["strategy"])
 
     # Read the data to be used in the project
     train = read_data(f'{path_data}train.tsv')
@@ -49,25 +112,10 @@ def get_preprocessed_data(path_data="data/"):
     X_val, y_val = validation['title'].values, validation['tags'].values
     X_test = test['title'].values
 
-    # Clean all the data
-    prepared_questions = []
-    cont = 0
-    test_texts = []
-    test_outs = []
-    for line in open(f'{path_data}text_prepare_tests.tsv', encoding='utf-8'):
-        test_texts.append(line)
-        line = text_prepare(line.strip())
-        prepared_questions.append(line)
-
-        test_outs.append(line)
-        cont += 1
-
-    text_prepare_results = '\n'.join(prepared_questions)
-
     # Retrieve preprocesed data
-    X_train = [text_prepare(x) for x in X_train]
-    X_val = [text_prepare(x) for x in X_val]
-    X_test = [text_prepare(x) for x in X_test]
+    X_train = [text_prepare(x, mutator) for x in X_train]
+    X_val = [text_prepare(x, mutator) for x in X_val]
+    X_test = [text_prepare(x, mutator) for x in X_test]
 
     return {"X_train": X_train, "X_val": X_val, "X_test": X_test, "y_train": y_train, "y_val": y_val}
 
@@ -79,4 +127,6 @@ def main():
 
 
 if __name__ == "__main__":
+
+    selected_options = check_arguments()
     main()
