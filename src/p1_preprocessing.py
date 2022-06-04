@@ -12,12 +12,10 @@ import sys
 nltk.download('stopwords')
 sys.path.append(os.getcwd()+"/mutamorfic")
 sys.path.append(os.getcwd())
+selected_options = {}
 
 
 def check_arguments():
-
-    if len(sys.argv) < 2:
-        return {}
 
     parser = argparse.ArgumentParser(
         description='Extra arguments can be specified for having a mutamorphic transformation.')
@@ -42,8 +40,6 @@ def check_arguments():
     selected_options["jumps"] = {"number": args.jumps, "counter": 0}
     return selected_options
 
-
-selected_options = check_arguments()
 
 # RegEx expressions to clean the data
 REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
@@ -120,4 +116,6 @@ def main():
 
 
 if __name__ == "__main__":
+
+    selected_options = check_arguments()
     main()
