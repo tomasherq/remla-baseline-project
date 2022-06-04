@@ -15,6 +15,16 @@ sys.path.append(os.getcwd())
 selected_options = {}
 
 
+# def start_monitoring():
+#     with open("monitoring/monitor.txt", "w") as file:
+#         file.write("")
+
+#     os.system("python3 monitoring/monitor_basic_metrics.py &")
+
+
+# start_monitoring()
+
+
 def check_arguments():
 
     parser = argparse.ArgumentParser(
@@ -87,6 +97,7 @@ def get_preprocessed_data(path_data="data/"):
 
     from mutamorfic.mutators import ReplacementMutator
 
+    mutator = None
     if "replace" in selected_options:
         mutator = ReplacementMutator(selected_options["replace"]["n_words_replace"],
                                      1, selected_options["replace"]["strategy"])
