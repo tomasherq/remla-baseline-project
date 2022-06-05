@@ -33,6 +33,7 @@ jobs:
                   pytest tests/tfidf.py
                   pytest tests/model_bag.py
                   pytest tests/model_tfidf.py
+                  pytest tests/mutamorphic_test.py
 
             - name: Check quality of the code
               run: pylint src
