@@ -1,28 +1,19 @@
-from joblib import dump, load
-import numpy as np
+
 import pandas as pd
 from ast import literal_eval
 from nltk.corpus import stopwords
 import nltk
 import re
 import argparse
-import os
 import sys
+import os
+from joblib import dump
+
 
 nltk.download('stopwords')
 sys.path.append(os.getcwd()+"/mutamorfic")
 sys.path.append(os.getcwd())
 selected_options = {}
-
-
-# def start_monitoring():
-#     with open("monitoring/monitor.txt", "w") as file:
-#         file.write("")
-
-#     os.system("python3 monitoring/monitor_basic_metrics.py &")
-
-
-# start_monitoring()
 
 
 def check_arguments():
@@ -32,6 +23,9 @@ def check_arguments():
 
     parser.add_argument("--replace", "-r", nargs=2, metavar=('<int>', '<str>'),
                         help="This option activates transformation by replacement. Need to specify the following: <Nº of words to replace> <Type of replace (random/most common word)>", required=False)
+
+    parser.add_argument("--drop", "-d", type=int,
+                        help="This option activates transformation by dropout. Need to specify the number of words to drop.", required=False)
     parser.add_argument("--jumps", "-j",  type=int, required=False, help="Change every 1/jump words.")
 
     args = parser.parse_args()
@@ -46,6 +40,9 @@ def check_arguments():
             words_replace = int(args.replace[0])
             if words_replace > 0:
                 selected_options["replace"] = {"n_words_replace": words_replace, "strategy": args.replace[1]}
+
+    elif args.drop is not None:
+        selected_options["drop"] = args.drop
 
     selected_options["jumps"] = {"number": args.jumps, "counter": 0}
     return selected_options
@@ -95,12 +92,16 @@ def text_prepare(text, mutator=None):
 
 def get_preprocessed_data(path_data="data/"):
 
-    from mutamorfic.mutators import ReplacementMutator
+    # Think that we have to change this please!
+    from mutamorfic.mutators import ReplacementMutator, DropoutMutator
 
     mutator = None
     if "replace" in selected_options:
         mutator = ReplacementMutator(selected_options["replace"]["n_words_replace"],
                                      1, selected_options["replace"]["strategy"])
+
+    elif "dropout" in selected_options:
+        mutator = DropoutMutator(selected_options["drop"], 1)
 
     # Read the data to be used in the project
     train = read_data(f'{path_data}train.tsv')
@@ -127,6 +128,10 @@ def main():
 
 
 if __name__ == "__main__":
+    from monitoring.monitoring_tools import start_execution, register_timestamp
 
+    start_execution(sys.argv[0])
     selected_options = check_arguments()
+
     main()
+    register_timestamp(sys.argv[0], "end")

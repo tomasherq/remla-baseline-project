@@ -1,7 +1,8 @@
 from joblib import dump, load
 import os
 import json
-
+import sys
+sys.path.append(os.getcwd())
 RESULTS_DIRECTION_BAG = "results/popular_words_bag.json"
 RESULTS_DIRECTION_TFIDF = "results/popular_words_tfidf.json"
 
@@ -44,16 +45,20 @@ def dump_feat_results_tfidf(classifier, tag, tags_classes, tfidf_vocab):
                          "top_negative_words": top_negative_words}, indent=4))
 
 
-mlb = load("output/multi_label_binarizer.joblib")
-words_dictionaries = load("output/words_dictionaries.joblib")
-classifiers = load("output/classifiers.joblib")
-tfidf_vocab = load("output/text_processor_data.joblib")["tfidf"]["tfidf_vocab"]
-tfidf_reversed_vocab = {i: word for word, i in tfidf_vocab.items()}
+if __name__ == '__main__':
+    from monitoring.monitoring_tools import end_execution, register_timestamp
+    register_timestamp(sys.argv[0])
+    mlb = load("output/multi_label_binarizer.joblib")
+    words_dictionaries = load("output/words_dictionaries.joblib")
+    classifiers = load("output/classifiers.joblib")
+    tfidf_vocab = load("output/text_processor_data.joblib")["tfidf"]["tfidf_vocab"]
+    tfidf_reversed_vocab = {i: word for word, i in tfidf_vocab.items()}
 
-classifier_bag = classifiers["bag"]
-dump_feat_results_bag(classifier_bag, 'c', mlb.classes,
-                      words_dictionaries["vocabulary"])
+    classifier_bag = classifiers["bag"]
+    dump_feat_results_bag(classifier_bag, 'c', mlb.classes,
+                          words_dictionaries["vocabulary"])
 
-classifier_tfidf = classifiers["tfidf"]
-dump_feat_results_tfidf(classifier_tfidf, 'c', mlb.classes,
-                        tfidf_reversed_vocab)
+    classifier_tfidf = classifiers["tfidf"]
+    dump_feat_results_tfidf(classifier_tfidf, 'c', mlb.classes,
+                            tfidf_reversed_vocab)
+    register_timestamp(sys.argv[0], "end")

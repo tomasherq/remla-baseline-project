@@ -1,4 +1,7 @@
 from joblib import dump, load
+import os
+import sys
+sys.path.append(os.getcwd())
 
 
 def run_prediction(classifier, X_val):
@@ -27,4 +30,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from monitoring.monitoring_tools import register_timestamp
+
+    register_timestamp(sys.argv[0])
     main()
+    register_timestamp(sys.argv[0], "end")
