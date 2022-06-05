@@ -12,6 +12,9 @@ sys.path.append(os.getcwd())
 SEED = 600
 random.seed(SEED)
 LIMIT = 2000
+# They can differ at most in a 5%
+MAX_DIFF_DROPOUT = 0.05
+MAX_DIFF_REPLACEMENT = 0.05
 
 
 def load_test_phrases(limit=LIMIT):
@@ -131,8 +134,8 @@ def test_mutamorphic():
         labels_bag = bag_classifier.predict(X_val_bag)
         labels_tfidf = tfidf_classifier.predict(X_val_tfidf)
 
-        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val), message_extra)
-        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val), message_extra)
+        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val), MAX_DIFF_REPLACEMENT, message_extra)
+        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val), MAX_DIFF_REPLACEMENT, message_extra)
 
     # Now we go for the mutants
     X_val_mutates_dropout = change_phrases_replacement(X_val)
@@ -146,8 +149,8 @@ def test_mutamorphic():
         labels_bag = bag_classifier.predict(X_val_bag)
         labels_tfidf = tfidf_classifier.predict(X_val_tfidf)
 
-        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val), message_extra)
-        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val), message_extra)
+        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val), MAX_DIFF_DROPOUT, message_extra)
+        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val), MAX_DIFF_DROPOUT, message_extra)
 
     print("All tests passed.")
 
