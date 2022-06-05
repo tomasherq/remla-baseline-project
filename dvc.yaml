@@ -49,3 +49,20 @@ stages:
             - output/multi_label_binarizer.joblib
             - output/words_dictionaries.joblib
             - output/classifiers.joblib
+        outs:
+            - results/popular_words_bag.json
+            - results/popular_words_tfidf.json
+
+    report metrics:
+        cmd: bash -c "rm -f monitoring/resources/monitor.txt && python3 monitoring/create_report.py"
+        deps:
+            - results/popular_words_bag.json
+            - results/popular_words_tfidf.json
+            - output/predictions.joblib
+            - output/val_data.joblib
+            - src/p6_analyze_features.py
+            - output/multi_label_binarizer.joblib
+            - output/words_dictionaries.joblib
+            - output/classifiers.joblib
+            - results/metrics-bag.json
+            - results/metrics-tfidf.json
