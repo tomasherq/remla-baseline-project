@@ -19,6 +19,6 @@ def get_diff_stats(X_labels_og, X_labels_new, y_val):
     return results
 
 
-def check_diff(values, limit=0.1):
+def check_diff(values, limit=0.1, message=""):
     for key, difference in values.items():
-        assert difference < limit, f"The value of the {key} stat, differs in {difference}"
+        assert difference < limit, f"The value of the {key} stat, differs in {difference}{message}"
