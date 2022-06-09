@@ -19,3 +19,4 @@ psutil
 markdown
 pdfkit
 xhtml2pdf
+mutamorphic-test

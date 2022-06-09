@@ -177,7 +177,7 @@ def read_run_times():
     start_time = 0
     total_time = 0
 
-    with open(f'{CURRENT_LOCATION}/resources/runtimes.txt', "r") as file:
+    with open(f'{CURRENT_LOCATION}/metrics/runtimes/runtimes.txt', "r") as file:
         for line in file:
             line = line.lower().strip()
             data = line.split(";")
@@ -212,6 +212,50 @@ def get_metrics_models():
             metrics_models[metric+model_used] = float(value)
 
     return metrics_models
+
+
+def get_most_seen_words_bag():
+
+    popular_words = ''
+    least_popular = ''
+
+    words = read_json(f"results/popular_words_bag.json")
+
+    for word in words["most_seen"]:
+        popular_words += f'- {word} \n'
+
+    for word in words["least_seen"]:
+        least_popular += f'- {word} \n'
+
+    return popular_words, least_popular
+
+
+def get_most_seen_words_tfidf():
+
+    popular_words = ''
+    least_popular = ''
+
+    words = read_json(f"results/popular_words_tfidf.json")
+
+    for word in words["top_positive_words"]:
+        popular_words += f'- {word} \n'
+
+    for word in words["top_negative_words"]:
+        least_popular += f'- {word} \n'
+
+    return popular_words, least_popular
+
+
+def include_words_models(output_document):
+    words_bag = get_most_seen_words_bag()
+    output_document = output_document.replace("##Bag_words_most##", words_bag[0])
+    output_document = output_document.replace("##Bag_words_least##", words_bag[1])
+
+    words_tfidf = get_most_seen_words_tfidf()
+    output_document = output_document.replace("##TFIDF_words_most##", words_tfidf[0])
+    output_document = output_document.replace("##TFIDF_words_least##", words_tfidf[1])
+
+    return output_document
 
 
 def get_best_model(metrics):
@@ -264,11 +308,10 @@ metrics_models = get_metrics_models()
 
 output_document = replace_in_template(metrics_models, output_document)
 
-
-if metrics_models["accuracybag"] < metrics_models["accuracytfidf"]:
-    best_model = "TF-IDF"
-
 output_document = output_document.replace("##bestmodel##", get_best_model(metrics_models))
+
+output_document = include_words_models(output_document)
+print(output_document)
 
 # Add this HTML to style the tables of the report
 source_html = markdown.markdown(output_document, extensions=['markdown.extensions.tables'])

@@ -8,10 +8,10 @@ import argparse
 import sys
 import os
 from joblib import dump
+from mutatest.mutators import *
 
 
 nltk.download('stopwords')
-sys.path.append(os.getcwd()+"/mutamorfic")
 sys.path.append(os.getcwd())
 selected_options = {}
 
@@ -22,7 +22,7 @@ def check_arguments():
         description='Extra arguments can be specified for having a mutamorphic transformation.')
 
     parser.add_argument("--replace", "-r", nargs=2, metavar=('<int>', '<str>'),
-                        help="This option activates transformation by replacement. Need to specify the following: <Nº of words to replace> <Type of replace (random/most common word)>", required=False)
+                        help="This option activates transformation by replacement. Need to specify the following: <Nº of words to replace> <Type of replace (random/most_common_first)>", required=False)
 
     parser.add_argument("--drop", "-d", type=int,
                         help="This option activates transformation by dropout. Need to specify the number of words to drop.", required=False)
@@ -37,11 +37,13 @@ def check_arguments():
     if replace_valid:
         if args.replace[1] in ["random", "most_common_first"] and args.replace[0].isdigit():
 
+            print("Selected replace")
             words_replace = int(args.replace[0])
             if words_replace > 0:
                 selected_options["replace"] = {"n_words_replace": words_replace, "strategy": args.replace[1]}
 
     elif args.drop is not None:
+        print("Selected drop")
         selected_options["drop"] = args.drop
 
     selected_options["jumps"] = {"number": args.jumps, "counter": 0}
@@ -93,7 +95,6 @@ def text_prepare(text, mutator=None):
 def get_preprocessed_data(path_data="data/"):
 
     # Think that we have to change this please!
-    from mutamorfic.mutators import ReplacementMutator, DropoutMutator
 
     mutator = None
     if "replace" in selected_options:
@@ -132,6 +133,5 @@ if __name__ == "__main__":
 
     start_execution(sys.argv[0])
     selected_options = check_arguments()
-
     main()
     register_timestamp(sys.argv[0], "end")

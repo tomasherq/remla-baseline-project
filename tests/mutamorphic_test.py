@@ -5,8 +5,8 @@ import sys
 import os
 from dependencies.model_functions import *
 import numpy as np
+from mutatest.mutators import *
 
-sys.path.append(os.getcwd()+"/mutamorfic")
 sys.path.append(os.getcwd())
 
 SEED = 600
@@ -38,7 +38,6 @@ def load_x_train():
 
 
 def change_phrases_replacement(X_val, num_replacements=2, num_variants=3, selection_strategy="random"):
-    from mutamorfic.mutators import ReplacementMutator
 
     mutator = ReplacementMutator(num_replacements, num_variants, selection_strategy)
 
@@ -62,7 +61,6 @@ def change_phrases_replacement(X_val, num_replacements=2, num_variants=3, select
 
 
 def change_phrases_dropout(X_val, num_replacements=2, num_variants=2):
-    from mutamorfic.mutators import DropoutMutator
 
     mutator = DropoutMutator(num_replacements, num_variants)
 
