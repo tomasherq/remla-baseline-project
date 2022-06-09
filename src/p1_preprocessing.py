@@ -116,8 +116,8 @@ def get_preprocessed_data(path_data="data/"):
 
     # Retrieve preprocesed data
     X_train = [text_prepare(x, mutator) for x in X_train]
-    X_val = [text_prepare(x, mutator) for x in X_val]
-    X_test = [text_prepare(x, mutator) for x in X_test]
+    X_val = [text_prepare(x) for x in X_val]
+    X_test = [text_prepare(x) for x in X_test]
 
     return {"X_train": X_train, "X_val": X_val, "X_test": X_test, "y_train": y_train, "y_val": y_val}
 
