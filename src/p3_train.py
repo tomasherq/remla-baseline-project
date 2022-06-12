@@ -5,7 +5,7 @@ from joblib import dump, load
 
 # Trainning function
 
-OUTPUT_DIR = "output/"
+OUTPUT_DIR = "../output/"
 
 
 def train_classifier(X_train, y_train, penalty='l1', C=1, seed=10):
@@ -38,12 +38,13 @@ def train_tfidf(tfidif_data, y_train, seed=10):
 
 
 def main():
-    text_process_data = load('output/text_processor_data.joblib')
+    text_process_data = load('../output/text_processor_data.joblib')
 
     bag_of_words_data = text_process_data["bag"]
     tfidif_data = text_process_data["tfidf"]
 
     y_val = bag_of_words_data["y_val"]
+    temp = y_val
     y_train = bag_of_words_data["y_train"]
     tags_counts = bag_of_words_data["tags_counts"]
 

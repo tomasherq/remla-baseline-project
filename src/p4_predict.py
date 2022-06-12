@@ -1,7 +1,8 @@
 from joblib import dump, load
+from sklearn.multiclass import OneVsRestClassifier
 
 
-def run_prediction(classifier, X_val):
+def run_prediction(classifier: OneVsRestClassifier, X_val):
     labels = classifier.predict(X_val)
     scores = classifier.decision_function(X_val)
 
@@ -10,20 +11,20 @@ def run_prediction(classifier, X_val):
 
 def main():
 
-    classifiers = load('output/classifiers.joblib')
-    text_process_data = load('output/text_processor_data.joblib')
+    classifiers = load('../output/classifiers.joblib')
+    text_process_data = load('../output/text_processor_data.joblib')
 
     predictions = {}
     # Load the model and the X_val to use
-    classifier_bag = classifiers['bag']
+    classifier_bag: OneVsRestClassifier = classifiers['bag']
     X_val_bag = text_process_data["bag"]["X_val"]
 
     predictions["bag"] = run_prediction(classifier_bag, X_val_bag)
 
-    classifier_tfidf = classifiers['tfidf']
+    classifier_tfidf: OneVsRestClassifier = classifiers['tfidf']
     X_val_tfdif = text_process_data["tfidf"]["X_val"]
     predictions["tfidf"] = run_prediction(classifier_tfidf, X_val_tfdif)
-    dump(predictions, 'output/predictions.joblib')
+    dump(predictions, '../output/predictions.joblib')
 
 
 if __name__ == "__main__":
