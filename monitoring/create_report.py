@@ -214,6 +214,10 @@ def get_metrics_models():
     return metrics_models
 
 
+def clean_words(word):
+    return word.replace("#", "\#").replace("-", "\-")
+
+
 def get_most_seen_words_bag():
 
     popular_words = ''
@@ -222,10 +226,10 @@ def get_most_seen_words_bag():
     words = read_json(f"results/popular_words_bag.json")
 
     for word in words["most_seen"]:
-        popular_words += f'- {word} \n'
+        popular_words += f'- {clean_words(word)} \n'
 
     for word in words["least_seen"]:
-        least_popular += f'- {word} \n'
+        least_popular += f'- {clean_words(word)} \n'
 
     return popular_words, least_popular
 
@@ -238,10 +242,10 @@ def get_most_seen_words_tfidf():
     words = read_json(f"results/popular_words_tfidf.json")
 
     for word in words["top_positive_words"]:
-        popular_words += f'- {word} \n'
+        popular_words += f'- {clean_words(word)} \n'
 
     for word in words["top_negative_words"]:
-        least_popular += f'- {word} \n'
+        least_popular += f'- {clean_words(word)} \n'
 
     return popular_words, least_popular
 
@@ -311,7 +315,6 @@ output_document = replace_in_template(metrics_models, output_document)
 output_document = output_document.replace("##bestmodel##", get_best_model(metrics_models))
 
 output_document = include_words_models(output_document)
-print(output_document)
 
 # Add this HTML to style the tables of the report
 source_html = markdown.markdown(output_document, extensions=['markdown.extensions.tables'])

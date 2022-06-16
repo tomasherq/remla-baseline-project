@@ -1,6 +1,6 @@
 from time import time
 import os
-RUNTIMES_LOCATION = "monitoring/resources/runtimes.txt"
+RUNTIMES_LOCATION = "monitoring/metrics/runtimes/runtimes.txt"
 MONITOR_FILE = "monitoring/resources/monitor.txt"
 
 
@@ -11,7 +11,8 @@ def register_timestamp(job_executed, stage="start"):
 
 def start_execution(job_executed):
     if os.path.exists(RUNTIMES_LOCATION):
-        os.remove(RUNTIMES_LOCATION)
+        creation_time = int(os.path.getctime(RUNTIMES_LOCATION)*10e5)
+        os.rename(RUNTIMES_LOCATION, RUNTIMES_LOCATION.replace(".txt", f"{creation_time}.txt"))
 
     register_timestamp(job_executed)
     with open(MONITOR_FILE, 'w') as file:

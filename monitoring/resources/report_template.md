@@ -35,7 +35,7 @@ The total number of reads and writes to the disk during the execution are the fo
 
 ## Pipeline run time
 
-The runtimes for the different stages (in seconds) are the following:
+The run times for the different stages (in seconds) are the following:
 <center>
 
 | Stage                  | Run time (s)            |
@@ -78,10 +78,31 @@ Values for the different metrics obtained for the two models tested.
 | Metric    | Bag of words     | TF-IDF             |
 |-----------|------------------|--------------------|
 | Accuracy  | ##accuracybag##  | ##accuracytfidf##  |
-| F1        | ##f1bag##        | ##f1tfidf##        |
+| F1 Score  | ##f1bag##        | ##f1tfidf##        |
 | Precision | ##precisionbag## | ##precisiontfidf## |
 | ROC       | ##rocbag##       | ##roctfidf##       |
 
 </center>
 
-The model that performed the best according to accuracy is the ##bestmodel##.
+
+## Feature analisis
+
+The model that performed the best according to most metrics is the ##bestmodel##.
+
+The most seen words in Bag of Words were the following:
+
+##Bag_words_most##
+
+and the least seen were:
+
+##Bag_words_least##
+
+For the TF-IDF model, the top positive words were:
+
+##TFIDF_words_most##
+
+and the top negative were:
+
+##TFIDF_words_least##
+
+
