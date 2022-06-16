@@ -2,7 +2,9 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.linear_model import LogisticRegression, RidgeClassifier
 from joblib import dump, load
-
+import os
+import sys
+sys.path.append(os.getcwd())
 # Trainning function
 
 OUTPUT_DIR = "output/"
@@ -62,4 +64,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from monitoring.monitoring_tools import register_timestamp
+
+    register_timestamp(sys.argv[0])
     main()
+    register_timestamp(sys.argv[0], "end")

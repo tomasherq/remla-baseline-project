@@ -5,13 +5,16 @@ import sys
 import os
 from dependencies.model_functions import *
 import numpy as np
+from mutatest.mutators import *
 
-sys.path.append(os.getcwd()+"/mutamorfic")
 sys.path.append(os.getcwd())
 
 SEED = 600
 random.seed(SEED)
 LIMIT = 2000
+# They can differ at most in a 5%
+MAX_DIFF_DROPOUT = 0.05
+MAX_DIFF_REPLACEMENT = 0.05
 
 
 def load_test_phrases(limit=LIMIT):
@@ -34,8 +37,7 @@ def load_x_train():
     return p1_preprocessing.read_data(f'data/train.tsv')['title'].values
 
 
-def change_phrases(X_val, num_replacements=2, num_variants=3, selection_strategy="random"):
-    from mutamorfic.mutators import ReplacementMutator
+def change_phrases_replacement(X_val, num_replacements=2, num_variants=3, selection_strategy="random"):
 
     mutator = ReplacementMutator(num_replacements, num_variants, selection_strategy)
 
@@ -56,6 +58,28 @@ def change_phrases(X_val, num_replacements=2, num_variants=3, selection_strategy
 
     return new_x_vals
     # To be implemented
+
+
+def change_phrases_dropout(X_val, num_replacements=2, num_variants=2):
+
+    mutator = DropoutMutator(num_replacements, num_variants)
+
+    new_x_vals = []
+    for i in range(0, num_variants):
+        new_x_vals.append(list())
+
+    for sentence in X_val:
+        results = mutator.mutate(sentence, SEED)
+
+        for i in range(0, num_variants):
+
+            if len(results) == num_variants:
+                new_x_vals[i].append(results[i])
+            else:
+                # This way we ENSURE that both results have equal length
+                new_x_vals[i].append(sentence)
+
+    return new_x_vals
 
 
 def get_values_classifiers(X_val, y_val, X_train):
@@ -98,16 +122,33 @@ def test_mutamorphic():
     labels_tfidf_og = tfidf_classifier.predict(X_val_tfidf)
 
     # Now we go for the mutants
-    X_val_mutates = change_phrases(X_val)
+    X_val_mutates_replacement = change_phrases_replacement(X_val)
 
-    for X_val_mutate in X_val_mutates:
+    for X_val_mutate in X_val_mutates_replacement:
+
+        message_extra = " in replacement mutation."
         X_val_bag, X_val_tfidf = get_values_classifiers(np.array(X_val_mutate), y_val, X_train)
 
         labels_bag = bag_classifier.predict(X_val_bag)
         labels_tfidf = tfidf_classifier.predict(X_val_tfidf)
 
-        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val))
-        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val))
+        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val), MAX_DIFF_REPLACEMENT, message_extra)
+        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val), MAX_DIFF_REPLACEMENT, message_extra)
+
+    # Now we go for the mutants
+    X_val_mutates_dropout = change_phrases_replacement(X_val)
+
+    for X_val_mutate in X_val_mutates_dropout:
+
+        message_extra = " in dropout mutation."
+
+        X_val_bag, X_val_tfidf = get_values_classifiers(np.array(X_val_mutate), y_val, X_train)
+
+        labels_bag = bag_classifier.predict(X_val_bag)
+        labels_tfidf = tfidf_classifier.predict(X_val_tfidf)
+
+        check_diff(get_diff_stats(labels_bag_og, labels_bag, y_val), MAX_DIFF_DROPOUT, message_extra)
+        check_diff(get_diff_stats(labels_tfidf_og, labels_tfidf, y_val), MAX_DIFF_DROPOUT, message_extra)
 
     print("All tests passed.")
 

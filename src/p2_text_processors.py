@@ -3,6 +3,9 @@ import numpy as np
 from regex import R
 from scipy import sparse as sp_sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
+import os
+import sys
+sys.path.append(os.getcwd())
 
 
 np.random.seed(1567)
@@ -120,4 +123,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from monitoring.monitoring_tools import register_timestamp
+
+    register_timestamp(sys.argv[0])
     main()
+    register_timestamp(sys.argv[0], "end")

@@ -16,3 +16,7 @@ pylint
 codecarbon==1.2.0
 joblib
 psutil
+markdown
+pdfkit
+xhtml2pdf
+mutamorphic-test
