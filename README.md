@@ -48,4 +48,8 @@ dvc init
 dvc repro
 ```
 
-The results of our execution will be in the folder results, in a JSON format, with a list of the most/least popular words in the text and metrics such as the accuracy or the precision of the tags that were set..
+## Results obtained after the execution
+
+The results of our execution will be reported in a PDF file whose location will be indicated at the end of the pipeline execution. These results include the resources used during the pipeline execution, the run times for the different stages of the pipeline, the size of the input files used for the model and the metrics obtained for the different models.
+
+

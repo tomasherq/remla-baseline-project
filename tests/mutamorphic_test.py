@@ -83,16 +83,13 @@ def change_phrases_dropout(X_val, num_replacements=2, num_variants=2):
 
 
 def get_values_classifiers(X_val, y_val, X_train):
-    from src import p1_preprocessing
+
     from src import p2_text_processors
-    X_val = [p1_preprocessing.text_prepare(x) for x in X_val]
 
     DICT_SIZE, INDEX_TO_WORDS = p2_text_processors.get_tags_and_words(X_val, y_val)[:2]
 
     tfidf_vectorizer = p2_text_processors.TfidfVectorizer(min_df=5, max_df=0.9, ngram_range=(1, 2),
                                                           token_pattern='(\S+)')
-
-    X_train = [p1_preprocessing.text_prepare(x) for x in X_train]
 
     X_val_bag = p2_text_processors.get_x_values_bag(INDEX_TO_WORDS, DICT_SIZE, X_val)
     tfidf_vectorizer.fit_transform(X_train)
@@ -105,9 +102,14 @@ def get_values_classifiers(X_val, y_val, X_train):
 def test_mutamorphic():
 
     from src import p2_text_processors
+    from src import p1_preprocessing
 
     X_val, y_val = load_test_phrases()
     X_train = load_x_train()
+
+    # Preprocess for both before mutating or doing other operations
+    X_val = [p1_preprocessing.text_prepare(x) for x in X_val]
+    X_train = [p1_preprocessing.text_prepare(x) for x in X_train]
 
     classifiers = load("tests/dependencies/classifiers.joblib")
     y_val = load('tests/dependencies/val_data.joblib')[:LIMIT]

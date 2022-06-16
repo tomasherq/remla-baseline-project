@@ -72,7 +72,12 @@ def text_prepare(text, mutator=None):
         return: modified initial string
     """
 
-    # We could change this to be better
+    text = text.lower()  # lowercase text
+    text = re.sub(REPLACE_BY_SPACE_RE, " ", text)  # replace REPLACE_BY_SPACE_RE symbols by space in text
+    text = re.sub(BAD_SYMBOLS_RE, "", text)  # delete symbols which are in BAD_SYMBOLS_RE from text
+    text = " ".join([word for word in text.split() if not word in STOPWORDS])  # delete stopwords from text
+
+    # We manipulate the text after it has been processed
     if mutator is not None:
 
         if selected_options["jumps"]["counter"] == 0:
@@ -85,10 +90,6 @@ def text_prepare(text, mutator=None):
             if selected_options["jumps"]["number"] <= selected_options["jumps"]["counter"]:
                 selected_options["jumps"]["counter"] = 0
 
-    text = text.lower()  # lowercase text
-    text = re.sub(REPLACE_BY_SPACE_RE, " ", text)  # replace REPLACE_BY_SPACE_RE symbols by space in text
-    text = re.sub(BAD_SYMBOLS_RE, "", text)  # delete symbols which are in BAD_SYMBOLS_RE from text
-    text = " ".join([word for word in text.split() if not word in STOPWORDS])  # delete stopwords from text
     return text
 
 
