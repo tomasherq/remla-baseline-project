@@ -49,12 +49,12 @@ def bag_of_words(text, words_to_index, dict_size):
     return result_vector
 
 
-def get_x_values_bag(WORDS_TO_INDEX, DICT_SIZE, X_vals):
+def get_x_values_bag(WORDS_TO_INDEX, DICT_SIZE, X_values):
     return sp_sparse.vstack([sp_sparse.csr_matrix(
-        bag_of_words(text, WORDS_TO_INDEX, DICT_SIZE)) for text in X_vals])
+        bag_of_words(text, WORDS_TO_INDEX, DICT_SIZE)) for text in X_values])
 
 
-def get_tags_and_words(X_values, y_values):
+def get_tags_and_words(X_values, y_values, DICT_SIZE=5000):
 
     # Dictionary of all tags from train corpus with their counts.
     tags_counts = {}
@@ -77,7 +77,6 @@ def get_tags_and_words(X_values, y_values):
             else:
                 tags_counts[tag] = 1
 
-    DICT_SIZE = 5000
     INDEX_TO_WORDS = sorted(words_counts.items(), key=lambda x: x[1], reverse=True)[:DICT_SIZE]
     WORDS_TO_INDEX = {word[0]: i for i, word in enumerate(INDEX_TO_WORDS)}
     ALL_WORDS = WORDS_TO_INDEX.keys()

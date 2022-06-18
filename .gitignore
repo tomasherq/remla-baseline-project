@@ -133,15 +133,15 @@ dmypy.json
 .pyre/
 
 .DS_STORE
-output/*
-results
+output/*.joblib
+results/*.json
 
 
 .bash_history
 nltk_data
 mutamorfic
 
-monitoring/metrics
+monitoring/metrics/*.json
 reports
 
 
