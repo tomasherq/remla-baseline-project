@@ -7,7 +7,6 @@ from sklearn.metrics import average_precision_score
 def get_diff_stats(X_labels_og, X_labels_new, y_val):
 
     results = {}
-
     results["accuracy"] = abs(accuracy_score(y_val, X_labels_og)-accuracy_score(y_val, X_labels_new))
     results["f1"] = abs(f1_score(y_val, X_labels_og, average='weighted') -
                         f1_score(y_val, X_labels_new, average='weighted'))
@@ -21,4 +20,4 @@ def get_diff_stats(X_labels_og, X_labels_new, y_val):
 
 def check_diff(values, limit=0.1, message=""):
     for key, difference in values.items():
-        assert difference < limit, f"The value of the {key} stat, differs in {difference}{message}"
+        assert difference < limit, f"The value of the {key} stat, differs in {round(difference,2)*100}{message}"
