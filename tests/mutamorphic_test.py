@@ -24,12 +24,14 @@ def load_classifiers_data(filename):
 
     X, y = data['title'].values, data['tags'].values
 
+    return X, y
+
+
+def load_test_phrases():
+
+    X, y = load_classifiers_data("data/validation.tsv")
+
     return X[:LIMIT], y
-
-
-def load_test_phrases(limit=LIMIT):
-
-    return load_classifiers_data("data/validation.tsv")
 
 
 def load_train_phrases():
