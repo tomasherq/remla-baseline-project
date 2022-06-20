@@ -4,7 +4,7 @@ from src.p1_preprocessing import text_prepare
 from src.p2_text_processors import bag_of_words
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import mean_squared_error
-from joblib import load
+from joblib import dump, load
 import numpy as np
 import pandas as pd
 from os import path
@@ -20,8 +20,8 @@ TEST_DATA = pd.read_csv(path.join(DATA_FOLDER, 'test.tsv'), sep='\t', dtype={"ti
 TEST_DATA = [x[0] for x in TEST_DATA]
 
 SEED = 600
-NUMBER_OF_TEST_CASES = 1000
-MAXIMUM_DISTANCE = 1.0
+NUMBER_OF_TEST_CASES = 20000
+MAXIMUM_DISTANCE = 20.0
 
 
 def get_input_sentences(rng: Random) -> List[str]:
@@ -43,10 +43,6 @@ def distance_function(vector_a: np.ndarray, vector_b: np.ndarray) -> float:
     return mean_squared_error(vector_a, vector_b)
 
 
-def run_tfidf(bag_of_words_vector: np.ndarray):
-    pass # TODO
-
-
 def test_mutamorphic_bow_replacement():
     rng = Random()
     rng.seed(SEED)
@@ -59,6 +55,8 @@ def test_mutamorphic_bow_replacement():
         random_seed=SEED
     )
     test.run()
+
+    dump(test, "test_object_replacement50.joblib")
 
     assert test.average_similarity < MAXIMUM_DISTANCE
 
@@ -76,9 +74,12 @@ def test_mutamorphic_bow_dropout():
     )
     test.run()
 
+    dump(test, "test_object_dropout.joblib")
+
     assert test.average_similarity < MAXIMUM_DISTANCE
 
 
 if __name__ == "__main__":
 
     test_mutamorphic_bow_replacement()
+    test_mutamorphic_bow_dropout()

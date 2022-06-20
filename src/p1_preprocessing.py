@@ -123,7 +123,7 @@ def get_preprocessed_data(path_data="../data/"):
 def main():
     preprocessed_data = get_preprocessed_data()
 
-    dump(preprocessed_data, '../output/preprocessed_data.joblib')
+    dump(preprocessed_data, 'output/preprocessed_data.joblib')
 
 
 if __name__ == "__main__":

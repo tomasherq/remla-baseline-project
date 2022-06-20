@@ -11,8 +11,8 @@ def run_prediction(classifier: OneVsRestClassifier, X_val):
 
 def main():
 
-    classifiers = load('../output/classifiers.joblib')
-    text_process_data = load('../output/text_processor_data.joblib')
+    classifiers = load('output/classifiers.joblib')
+    text_process_data = load('output/text_processor_data.joblib')
 
     predictions = {}
     # Load the model and the X_val to use
@@ -24,7 +24,7 @@ def main():
     classifier_tfidf: OneVsRestClassifier = classifiers['tfidf']
     X_val_tfdif = text_process_data["tfidf"]["X_val"]
     predictions["tfidf"] = run_prediction(classifier_tfidf, X_val_tfdif)
-    dump(predictions, '../output/predictions.joblib')
+    dump(predictions, 'output/predictions.joblib')
 
 
 if __name__ == "__main__":

@@ -110,13 +110,13 @@ def get_processors(preprocessed_data):
 
 
 def main():
-    preprocessed_data = load('../output/preprocessed_data.joblib')
+    preprocessed_data = load('output/preprocessed_data.joblib')
 
     output_data, ALL_WORDS, INDEX_TO_WORDS, WORDS_TO_INDEX = get_processors(preprocessed_data)
 
-    dump(output_data, '../output/text_processor_data.joblib')
-    dump(WORDS_TO_INDEX, '../output/words_to_index.joblib')
-    dump({"all_words": list(ALL_WORDS), "vocabulary": INDEX_TO_WORDS}, "../output/words_dictionaries.joblib")
+    dump(output_data, 'output/text_processor_data.joblib')
+    dump(WORDS_TO_INDEX, 'output/words_to_index.joblib')
+    dump({"all_words": list(ALL_WORDS), "vocabulary": INDEX_TO_WORDS}, "output/words_dictionaries.joblib")
 
 
 if __name__ == "__main__":
