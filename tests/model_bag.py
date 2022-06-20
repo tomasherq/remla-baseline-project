@@ -47,4 +47,4 @@ def test_model_bag():
                           p5_evaluation.get_eval_results(y_val, predictions_2["labels"], predictions_2["scores"]))
 
 
-check_diff(test_model_bag())
+check_diff(test_model_bag(), 0.001)

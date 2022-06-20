@@ -13,8 +13,8 @@ SEED = 600
 random.seed(SEED)
 LIMIT = 2000
 # Metrics can differ in at most 15%
-MAX_DIFF_DROPOUT = 0.15
-MAX_DIFF_REPLACEMENT = 0.15
+MAX_DIFF_DROPOUT = 0.20
+MAX_DIFF_REPLACEMENT = 0.20
 
 
 def load_classifiers_data(filename):

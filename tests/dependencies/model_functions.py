@@ -12,10 +12,7 @@ def get_diff_stats(results_og, results_new):
     # Set as a a proportion to 1
     for key in results_og:
         difference_percentage = (results_og[key]-results_new[key])/results_og[key]
-        if difference_percentage < 0:
-            print("YAP: ", difference_percentage)
-        else:
-            print("NOPE: ", difference_percentage)
+
         differences[key] = difference_percentage
 
     return differences
