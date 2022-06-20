@@ -52,4 +52,14 @@ dvc repro
 
 The results of our execution will be reported in a PDF file whose location will be indicated at the end of the pipeline execution. These results include the resources used during the pipeline execution, the run times for the different stages of the pipeline, the size of the input files used for the model and the metrics obtained for the different models.
 
+The output files are the following:
+
+- results/metrics-(bag or tfidf).json: Results for the different metrics measured for the model. 
+- monitoring/metrics/runtimes/runtimes.txt: Run times of the different pipeline stages.
+- monitoring/metrics/results_execution.json: Resources used during the pipeline execution by the computer.
+- static_analysis/report_lynter/report.txt: Output of running `pylint src`.
+- run_report.pdf: Summary of the results obtained.
+- results/popular_words_(bag or tfidf).json: Most and least relevant words for each text transformer.
+
+
 
