@@ -37,7 +37,6 @@ To execute the pipeline we have to first build and run the docker image of this 
 ```
 docker build --progress plain . -t remla-project-g18
 docker run -it --rm -v "$(pwd)":/root/project remla-project-g18
-
 ```
 
 Once inside docker we have to access the project folder and we can execute the pipeline:
@@ -47,6 +46,8 @@ cd project
 dvc init
 dvc repro
 ```
+
+All the files in this repository are meant to be executed from the root folder, as they all use relative paths.
 
 ## Results obtained after the execution
 

@@ -3,11 +3,11 @@ import json
 import random
 import sys
 import os
-from dependencies.model_functions import *
 import numpy as np
 from mutatest.mutators import *
 
 sys.path.append(os.getcwd())
+
 
 SEED = 600
 random.seed(SEED)
@@ -115,6 +115,8 @@ def get_results_predictions(classifier, X_val, y_val):
 
 def test_mutamorphic():
 
+    # from src import p2_text_processors
+    from dependencies.model_functions import check_diff, get_diff_stats
     from src import p1_preprocessing
 
     X_val, y_val = load_test_phrases()
@@ -139,20 +141,20 @@ def test_mutamorphic():
     results_tfidf_og = get_results_predictions(tfidf_classifier, X_val_tfidf, y_val)
 
     # We compare the senteces obtained by using the replacement mutator
-    # X_val_mutates_replacement = change_phrases_replacement(X_val)
+    X_val_mutates_replacement = change_phrases_replacement(X_val)
 
-    # for X_val_mutate in X_val_mutates_replacement:
+    for X_val_mutate in X_val_mutates_replacement:
 
-    #     X_val_bag, X_val_tfidf = get_values_classifiers(np.array(X_val_mutate), y_val, X_train, y_train)
+        X_val_bag, X_val_tfidf = get_values_classifiers(np.array(X_val_mutate), y_val, X_train, y_train)
 
-    #     results_bag_mutated = get_results_predictions(bag_classifier, X_val_bag, y_val)
-    #     results_tfidf_mutated = get_results_predictions(tfidf_classifier, X_val_tfidf, y_val)
+        results_bag_mutated = get_results_predictions(bag_classifier, X_val_bag, y_val)
+        results_tfidf_mutated = get_results_predictions(tfidf_classifier, X_val_tfidf, y_val)
 
-    #     check_diff(get_diff_stats(results_bag_og, results_bag_mutated),
-    #                MAX_DIFF_REPLACEMENT, " BOW in replacement mutation.")
+        check_diff(get_diff_stats(results_bag_og, results_bag_mutated),
+                   MAX_DIFF_REPLACEMENT, " BOW in replacement mutation.")
 
-    #     check_diff(get_diff_stats(results_tfidf_og, results_tfidf_mutated),
-    #                MAX_DIFF_REPLACEMENT, " TFIDF in replacement mutation.")
+        check_diff(get_diff_stats(results_tfidf_og, results_tfidf_mutated),
+                   MAX_DIFF_REPLACEMENT, " TFIDF in replacement mutation.")
 
     # We compare the senteces obtained by using the replacement mutator
 

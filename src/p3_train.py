@@ -46,6 +46,7 @@ def main():
     tfidif_data = text_process_data["tfidf"]
 
     y_val = bag_of_words_data["y_val"]
+    temp = y_val
     y_train = bag_of_words_data["y_train"]
     tags_counts = bag_of_words_data["tags_counts"]
 

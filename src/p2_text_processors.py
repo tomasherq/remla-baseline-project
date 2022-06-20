@@ -108,16 +108,16 @@ def get_processors(preprocessed_data):
 
     output_data = {"tfidf": output_data_tdif, "bag": output_data_bag}
 
-    return output_data, ALL_WORDS, INDEX_TO_WORDS
+    return output_data, ALL_WORDS, INDEX_TO_WORDS, WORDS_TO_INDEX
 
 
 def main():
     preprocessed_data = load('output/preprocessed_data.joblib')
 
-    output_data, ALL_WORDS, INDEX_TO_WORDS = get_processors(preprocessed_data)
+    output_data, ALL_WORDS, INDEX_TO_WORDS, WORDS_TO_INDEX = get_processors(preprocessed_data)
 
     dump(output_data, 'output/text_processor_data.joblib')
-
+    dump(WORDS_TO_INDEX, 'output/words_to_index.joblib')
     dump({"all_words": list(ALL_WORDS), "vocabulary": INDEX_TO_WORDS}, "output/words_dictionaries.joblib")
 
 
