@@ -1,5 +1,5 @@
 from joblib import dump, load
-from mutamorphic_test import run_bag_of_words, distance_function
+from .mutamorphic_test_no_labels import run_bag_of_words, distance_function
 from matplotlib import pyplot as plt
 import numpy as np
 import math
