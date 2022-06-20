@@ -9,6 +9,16 @@ import sys
 sys.path.append(os.getcwd())
 
 
+def get_eval_results(y_val, labels, scores):
+    results = {}
+    results["accuracy"] = accuracy_score(y_val, labels)
+    results["f1"] = f1_score(y_val, labels, average='weighted')
+    results["precision"] = average_precision_score(y_val, labels, average='macro')
+    results["roc"] = roc_auc_score(y_val, scores, multi_class="ovo")
+
+    return results
+
+
 def dump_eval_results(y_val, prediction_results, type_pred):
 
     RESULTS_DIRECTION = "results/metrics-$type.json"
@@ -16,11 +26,7 @@ def dump_eval_results(y_val, prediction_results, type_pred):
     labels = prediction_results[type_pred]["labels"]
     scores = prediction_results[type_pred]["scores"]
 
-    results = {}
-    results["accuracy"] = accuracy_score(y_val, labels)
-    results["f1"] = f1_score(y_val, labels, average='weighted')
-    results["precision"] = average_precision_score(y_val, labels, average='macro')
-    results["roc"] = roc_auc_score(y_val, scores, multi_class="ovo")
+    results = get_eval_results(y_val, labels, scores)
 
     RESULTS_DIRECTION = RESULTS_DIRECTION.replace("$type", type_pred)
 

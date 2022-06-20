@@ -28,8 +28,8 @@ while True:
     disk_usage = psutil.disk_usage("/")
     io_metrics = psutil.disk_io_counters()
 
-    # This is the current if we want cummulative we can just do it at the end?
-    # I thinks is nice to have data points tho to make maybe some graphs
+    # This is done to get the reads per second,
+    # substracting the previous value
     reads = io_metrics.read_count-reads
     writes = io_metrics.write_count-writes
 
@@ -42,6 +42,8 @@ while True:
 
 summary_results = {}
 
+# Once we got all the values we
+# get the mean/total values of the metrics
 for key, values in metrics_used.items():
 
     if key == "reads" or key == "writes":
@@ -51,6 +53,7 @@ for key, values in metrics_used.items():
 
 metrics_used["total"] = summary_results
 
+# We save the values and rename previous execution results
 if os.path.exists(RESULTS_DIRECTION):
     creation_time = int(os.path.getctime(RESULTS_DIRECTION)*10e5)
     os.rename(RESULTS_DIRECTION, RESULTS_DIRECTION.replace(".json", f"-{creation_time}.json"))

@@ -92,7 +92,7 @@ def text_prepare(text, mutator=None):
     return text
 
 
-def get_preprocessed_data(path_data="../data/"):
+def get_preprocessed_data(path_data="data/"):
 
     # Think that we have to change this please!
     from mutatest.mutators import ReplacementMutator

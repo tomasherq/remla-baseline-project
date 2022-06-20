@@ -37,7 +37,6 @@ To execute the pipeline we have to first build and run the docker image of this 
 ```
 docker build --progress plain . -t remla-project-g18
 docker run -it --rm -v "$(pwd)":/root/project remla-project-g18
-
 ```
 
 Once inside docker we have to access the project folder and we can execute the pipeline:
@@ -48,8 +47,20 @@ dvc init
 dvc repro
 ```
 
+All the files in this repository are meant to be executed from the root folder, as they all use relative paths.
+
 ## Results obtained after the execution
 
 The results of our execution will be reported in a PDF file whose location will be indicated at the end of the pipeline execution. These results include the resources used during the pipeline execution, the run times for the different stages of the pipeline, the size of the input files used for the model and the metrics obtained for the different models.
+
+The output files are the following:
+
+- results/metrics-(bag or tfidf).json: Results for the different metrics measured for the model. 
+- monitoring/metrics/runtimes/runtimes.txt: Run times of the different pipeline stages.
+- monitoring/metrics/results_execution.json: Resources used during the pipeline execution by the computer.
+- static_analysis/report_lynter/report.txt: Output of running `pylint src`.
+- run_report.pdf: Summary of the results obtained.
+- results/popular_words_(bag or tfidf).json: Most and least relevant words for each text transformer.
+
 
 

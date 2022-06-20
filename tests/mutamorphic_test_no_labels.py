@@ -1,26 +1,27 @@
 from mutatest.test_runner import MutamorphicTest, MutamorphicTestCase
 from mutatest.mutators import ReplacementMutator, DropoutMutator
-from src.p1_preprocessing import text_prepare
-from src.p2_text_processors import bag_of_words
+
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import mean_squared_error
 from joblib import dump, load
 import numpy as np
 import pandas as pd
-from os import path
+import sys
+import os
 from random import Random
 from typing import List
 
-MODEL_FOLDER = "../output/"
-DATA_FOLDER = "../data/"
-WORDS_TO_INDEX = load(path.join(MODEL_FOLDER, 'words_to_index.joblib'))
+sys.path.append(os.getcwd())
+
+
+WORDS_TO_INDEX = load('tests/dependencies/words_to_index.joblib')
 DICT_SIZE = len(WORDS_TO_INDEX)
-CLASSIFIERS = load(path.join(MODEL_FOLDER, 'classifiers.joblib'))
-TEST_DATA = pd.read_csv(path.join(DATA_FOLDER, 'test.tsv'), sep='\t', dtype={"title": object})[["title"]].values.tolist()
+CLASSIFIERS = load('tests/dependencies/classifiers.joblib')
+TEST_DATA = pd.read_csv(f'data/test.tsv', sep='\t', dtype={"title": object})[["title"]].values.tolist()
 TEST_DATA = [x[0] for x in TEST_DATA]
 
 SEED = 600
-NUMBER_OF_TEST_CASES = 20000
+NUMBER_OF_TEST_CASES = 1000
 MAXIMUM_DISTANCE = 20.0
 
 
@@ -29,6 +30,9 @@ def get_input_sentences(rng: Random) -> List[str]:
 
 
 def run_bag_of_words(sentence: str) -> np.ndarray:
+
+    from src.p1_preprocessing import text_prepare
+    from src.p2_text_processors import bag_of_words
     classifier: OneVsRestClassifier = CLASSIFIERS['bag']
     cleaned_input = text_prepare(sentence)
     input_vector = bag_of_words(cleaned_input, WORDS_TO_INDEX, DICT_SIZE)
@@ -56,9 +60,10 @@ def test_mutamorphic_bow_replacement():
     )
     test.run()
 
-    dump(test, "test_object_replacement50.joblib")
+    dump(test, "tests/dependencies/test_object_replacement50.joblib")
 
-    assert test.average_similarity < MAXIMUM_DISTANCE
+    print(test.average_similarity)
+    assert test.average_similarity < MAXIMUM_DISTANCE, f"The average similarity is {test.average_similarity} for the replacement."
 
 
 def test_mutamorphic_bow_dropout():
@@ -74,9 +79,9 @@ def test_mutamorphic_bow_dropout():
     )
     test.run()
 
-    dump(test, "test_object_dropout.joblib")
+    dump(test, "tests/dependencies/test_object_dropout.joblib")
 
-    assert test.average_similarity < MAXIMUM_DISTANCE
+    assert test.average_similarity < MAXIMUM_DISTANCE, f"The average similarity is {test.average_similarity} for the dropout."
 
 
 if __name__ == "__main__":

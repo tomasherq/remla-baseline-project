@@ -18,6 +18,11 @@ LOCATION_GRAPH = CURRENT_LOCATION+"/resources/chart_usage.svg"
 
 
 def create_chart(location_save):
+    '''Create a chart with the data obtained from the monitoring.
+
+    Args:
+        location_save (path): Where the image shall be stored
+    '''
     MARGIN_RAM = 10
     MARGIN_DISK = 4
 
@@ -47,6 +52,7 @@ def create_chart(location_save):
     plt.rc('xtick', labelsize=12)  # fontsize of the x tick labels
     plt.rc('ytick', labelsize=12)  # fontsize of the y tick labels
     plt.rc('legend', fontsize=15)  # fontsize of the legend
+
     # This is the legend used by everyone
     x = list()
     for i in range(len(results["cpu_usage"])):

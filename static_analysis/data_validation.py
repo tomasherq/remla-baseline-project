@@ -6,6 +6,7 @@ import json
 
 
 def read_info_anomaly(anomaly):
+    # This is to report the anomalies the user may encounter
     affected_area = anomaly[0]
 
     reasons = anomaly[1].reason
@@ -21,6 +22,8 @@ def read_info_anomaly(anomaly):
 
 
 def get_anomalies_detected(anomalies):
+
+    # Go through the anomalues and append them to a list
     anomalies_detected = defaultdict(list)
 
     for info in anomalies.anomaly_info.items():
@@ -49,6 +52,7 @@ def get_message(anomalies_files):
 
 
 def test_detect_anomalies():
+
     train_df = pd.read_csv(f'data/train.tsv', sep="\t")
     val_df = pd.read_csv(f'data/validation.tsv', sep="\t")
     test_df = pd.read_csv(f'data/test.tsv', sep="\t")
