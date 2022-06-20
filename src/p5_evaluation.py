@@ -5,6 +5,8 @@ from sklearn.metrics import average_precision_score
 from joblib import load
 import os
 import json
+import sys
+sys.path.append(os.getcwd())
 
 
 def dump_eval_results(y_val, prediction_results, type_pred):
@@ -42,4 +44,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from monitoring.monitoring_tools import register_timestamp
+
+    register_timestamp(sys.argv[0])
     main()
+    register_timestamp(sys.argv[0], "end")

@@ -14,6 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
+
 lib/
 lib64/
 parts/
@@ -132,13 +133,18 @@ dmypy.json
 .pyre/
 
 .DS_STORE
-output/*
-results
+output/*.joblib
+results/*.json
 
 
 .bash_history
 nltk_data
 mutamorfic
 
+monitoring/metrics/*.json
+reports
+
+
 .idea/
+
 

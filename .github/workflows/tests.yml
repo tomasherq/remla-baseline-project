@@ -26,6 +26,11 @@ jobs:
             - name: Data validation
               run: pytest static_analysis/data_validation.py
 
+            - name: Check quality of the code
+              run: |
+                  pylint src
+                  pytest static_analysis/verify_code_quality.py
+
             - name: Run tests
               run: |
                   pytest tests/preprocessing.py 
@@ -33,6 +38,4 @@ jobs:
                   pytest tests/tfidf.py
                   pytest tests/model_bag.py
                   pytest tests/model_tfidf.py
-
-            - name: Check quality of the code
-              run: pylint src
+                  pytest tests/mutamorphic_test.py
