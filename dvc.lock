@@ -17,11 +17,11 @@ stages:
       md5: e17d202b34b8bbdb182567580fd3569c
       size: 150392
   preprocess:
-    cmd: python src/1_preprocessing.py
+    cmd: python src/p1_preprocessing.py
     deps:
-    - path: src/1_preprocessing.py
-      md5: 84e7514401625b64f21f3194e80abbbb
-      size: 2263
+    - path: src/p1_preprocessing.py
+      md5: 053c3d72792a6dee5872698ab719e85c
+      size: 4743
     outs:
     - path: output/preprocessed_data.joblib
       md5: b9f1085ac0fa1aa2ceddb697efe069f3
@@ -37,18 +37,18 @@ stages:
       md5: b9f1085ac0fa1aa2ceddb697efe069f3
       size: 12448057
   train:
-    cmd: python src/3_train.py
+    cmd: python src/p3_train.py
     deps:
     - path: output/text_processor_data.joblib
-      md5: 5317ce0d3bb57f8135728976f9cd3cb2
-      size: 18565594
-    - path: src/3_train.py
-      md5: c54f98eae138f6bbbda01125c0eca007
-      size: 1802
+      md5: 5d55b0073bd2039ee1db502a5361f21e
+      size: 27797752
+    - path: src/p3_train.py
+      md5: 6bcd0c11957f2e45945e17f254d143ec
+      size: 2079
     outs:
     - path: output/classifiers.joblib
-      md5: 7bbbafa3a12b4d5f1c8ebd3761923bf1
-      size: 18703620
+      md5: bef7d6b85fe22c1ac5b84660569b2d01
+      size: 18703822
     - path: output/multi_label_binarizer.joblib
       md5: 1d6096b4a06b0aa20959ff086235d9b6
       size: 3748
@@ -56,68 +56,108 @@ stages:
       md5: fa3a8b990e85618bcf5ad2ad3fdafe41
       size: 24000218
   predict:
-    cmd: python src/4_predict.py
+    cmd: python src/p4_predict.py
     deps:
     - path: output/classifiers.joblib
-      md5: 7bbbafa3a12b4d5f1c8ebd3761923bf1
-      size: 18703620
+      md5: bef7d6b85fe22c1ac5b84660569b2d01
+      size: 18703822
     - path: output/text_processor_data.joblib
-      md5: 5317ce0d3bb57f8135728976f9cd3cb2
-      size: 18565594
-    - path: src/4_predict.py
-      md5: dd3fdc6030db157107de2839476783c5
-      size: 826
+      md5: 5d55b0073bd2039ee1db502a5361f21e
+      size: 27797752
+    - path: src/p4_predict.py
+      md5: 6e5e67f8ccf18930e045593c14e1ab07
+      size: 1133
     outs:
     - path: output/predictions.joblib
-      md5: 29e2b2c37f923c42bc1694769757d546
+      md5: 84aa6675bf4de61b3f2458860906d2eb
       size: 96000437
   analyze:
-    cmd: python src/6_analyze_features.py
+    cmd: python src/p6_analyze_features.py
     deps:
     - path: output/classifiers.joblib
-      md5: 7bbbafa3a12b4d5f1c8ebd3761923bf1
-      size: 18703620
+      md5: bef7d6b85fe22c1ac5b84660569b2d01
+      size: 18703822
     - path: output/multi_label_binarizer.joblib
       md5: 1d6096b4a06b0aa20959ff086235d9b6
       size: 3748
     - path: output/words_dictionaries.joblib
-      md5: e17d202b34b8bbdb182567580fd3569c
-      size: 150392
-    - path: src/6_analyze_features.py
-      md5: 1bc96ab3aa796cd15d91f27f62ba0979
-      size: 2391
+      md5: ed8462e621b285ba62013c8f9cc7fe80
+      size: 150011
+    - path: src/p6_analyze_features.py
+      md5: ae5c6899716f98ae1c634f4f9eca2821
+      size: 2658
+    outs:
+    - path: results/popular_words_bag.json
+      md5: 64ef170959fae9ced2230fc4cc03dc89
+      size: 224
+    - path: results/popular_words_tfidf.json
+      md5: 9a1d5f610fb314142c451c2019360188
+      size: 248
   evaluation:
-    cmd: python src/5_evaluation.py
+    cmd: python src/p5_evaluation.py
     deps:
     - path: output/predictions.joblib
-      md5: 29e2b2c37f923c42bc1694769757d546
+      md5: 84aa6675bf4de61b3f2458860906d2eb
       size: 96000437
     - path: output/val_data.joblib
       md5: fa3a8b990e85618bcf5ad2ad3fdafe41
       size: 24000218
-    - path: src/5_evaluation.py
-      md5: f10dc74fae9cb758ef300db84ea47fad
-      size: 1429
+    - path: src/p5_evaluation.py
+      md5: cb5643431959ff98960ac75767fd24e5
+      size: 1733
     outs:
     - path: results/metrics-bag.json
-      md5: 2e06cd83469404b92e408aa10c54a96c
-      size: 92
+      md5: 0d8e249821484b4c20485f49866ca546
+      size: 136
     - path: results/metrics-tfidf.json
-      md5: 42191dd32e5933a76d8538374d4a5dd3
-      size: 138
+      md5: d98f252c2b0d24a3f556eb4db1ac724b
+      size: 136
   processText:
-    cmd: python src/2_text_processors.py
+    cmd: python src/p2_text_processors.py
     deps:
     - path: output/preprocessed_data.joblib
       md5: b9f1085ac0fa1aa2ceddb697efe069f3
       size: 12448057
-    - path: src/2_text_processors.py
-      md5: ad0c290bfc728cdee6b8084f5a641a9f
-      size: 3607
+    - path: src/p2_text_processors.py
+      md5: 94a8c7df9303cfbf45fb9410072682ce
+      size: 4303
     outs:
     - path: output/text_processor_data.joblib
-      md5: 5317ce0d3bb57f8135728976f9cd3cb2
-      size: 18565594
+      md5: 5d55b0073bd2039ee1db502a5361f21e
+      size: 27797752
     - path: output/words_dictionaries.joblib
-      md5: e17d202b34b8bbdb182567580fd3569c
-      size: 150392
+      md5: ed8462e621b285ba62013c8f9cc7fe80
+      size: 150011
+  report metrics:
+    cmd: bash -c "rm -f monitoring/resources/monitor.txt && python3 monitoring/create_report.py"
+    deps:
+    - path: output/classifiers.joblib
+      md5: bef7d6b85fe22c1ac5b84660569b2d01
+      size: 18703822
+    - path: output/multi_label_binarizer.joblib
+      md5: 1d6096b4a06b0aa20959ff086235d9b6
+      size: 3748
+    - path: output/predictions.joblib
+      md5: 84aa6675bf4de61b3f2458860906d2eb
+      size: 96000437
+    - path: output/val_data.joblib
+      md5: fa3a8b990e85618bcf5ad2ad3fdafe41
+      size: 24000218
+    - path: output/words_dictionaries.joblib
+      md5: ed8462e621b285ba62013c8f9cc7fe80
+      size: 150011
+    - path: results/metrics-bag.json
+      md5: 0d8e249821484b4c20485f49866ca546
+      size: 136
+    - path: results/metrics-tfidf.json
+      md5: d98f252c2b0d24a3f556eb4db1ac724b
+      size: 136
+    - path: results/popular_words_bag.json
+      md5: 64ef170959fae9ced2230fc4cc03dc89
+      size: 224
+    - path: results/popular_words_tfidf.json
+      md5: 9a1d5f610fb314142c451c2019360188
+      size: 248
+    - path: src/p6_analyze_features.py
+      md5: ae5c6899716f98ae1c634f4f9eca2821
+      size: 2658
